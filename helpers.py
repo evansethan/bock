@@ -59,7 +59,7 @@ def parse_midi_files(dir_path, aug_range):
 
     for i, file in enumerate(files):
         try:
-            if i % 10 == 0: print(f"  Processing {i}/{len(files)}: {os.path.basename(file)}")
+            if i % 20 == 0: print(f"  Processing {i}/{len(files)}: {os.path.basename(file)}")
             midi = music21.converter.parse(file)
 
             # Augmentation Loop

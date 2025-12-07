@@ -124,11 +124,11 @@ def generate(config_name):
 
 
 def create_songs():
-    generate("speedster")
-    # generate("classic")
-    # generate("composer")
-    # generate("titan")
-    # generate("deep_stack")
+    # generate("speedster")
+    generate("classic")
+    generate("composer")
+    generate("titan")
+    generate("deep_stack")
 
 
 if __name__ == "__main__":
