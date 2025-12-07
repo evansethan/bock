@@ -1,15 +1,13 @@
 import os
-import sys
 import torch
-import torch.nn as nn
 import numpy as np
 import pickle
 from fractions import Fraction
 import music21
-from config import MODEL_CONFIGS
-from helpers import nucleus_sample, DualMusicLSTM
+from config import load_config
+from helpers import nucleus_sample
 
-# --- BASE CONFIGURATION ---
+# --- OLD CONFIGURATION (kept in for safety, will be overwritten) ---
 CACHE_FILE = "models/current/processed_midi.pkl"
 OUTPUT_FILE = "models/current/output.mid"
 MODEL_FILE = 'models/current/model.pkl'
@@ -27,30 +25,10 @@ TEMP_D = 1.1       # Creativity for rhythm (higher = less repetitive rhythm)
 TOP_P = 0.9   
 
 
-def load_config(config_name):
-    # --- SET NEW CONFIG ---
-    if config_name not in MODEL_CONFIGS:
-        raise ValueError(f"Config '{config_name}' not found.")
-        
-    config = MODEL_CONFIGS[config_name]
-
-    # Inject variables into global scope
-    globals().update(config)
-
-    # --- NEW: Auto-create the directory ---
-    # Extracts "models/titan" from "models/titan/model.pkl"
-    folder_path = os.path.dirname(config["MODEL_FILE"])
-    if not os.path.exists(folder_path):
-        print(f"Creating directory: {folder_path}")
-        os.makedirs(folder_path)
-
-    print(f"Current Model: {config_name}")
-
-
-
 def generate(config_name):
 
-    load_config(config_name)
+    config = load_config(config_name)
+    globals().update(config)
 
     print(f"Current Hidden Size: {HIDDEN_SIZE}") # make sure config was set
     NUM_NOTES = int(SEQ_LENGTH/2)  # Length of generated song (don't generate past context window)
@@ -58,7 +36,7 @@ def generate(config_name):
 
     # Detect Device
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
-    print(f"🚀 Using Device: {device.type.upper()}")
+    print(f"Using Device: {device.type.upper()}")
 
     # Load Processed Data (Vocabularies)
     if not os.path.exists(CACHE_FILE):
@@ -76,14 +54,14 @@ def generate(config_name):
     # Load Model
     if not os.path.exists(MODEL_FILE):
         raise FileNotFoundError(f"Error: {MODEL_FILE} not found. Train the model first!")
-    print(f"✅ Loading model from {MODEL_FILE}...")
+    print(f"Loading model from {MODEL_FILE}...")
     with open(MODEL_FILE, 'rb') as f:
         model = pickle.load(f)
     model.to(device)
     model.eval()
 
     # --- GENERATION ---
-    print("🎹 Starting generation...")
+    print("Starting generation...")
 
     # Create a sequence of IDs to seed the generation
     all_pitch_ids = [pitch_to_int[p] for p in input_pitches if p in pitch_to_int]
@@ -124,7 +102,7 @@ def generate(config_name):
 
     # --- RECONSTRUCT & SAVE MIDI ---
     output_stream = music21.stream.Stream()
-    print("🎵 Converting tokens to MIDI...")
+    print("Converting tokens to MIDI...")
 
     for p, d in zip(generated_pitches, generated_durs):
         try:
@@ -142,10 +120,10 @@ def generate(config_name):
             pass # Silently skip invalid tokens
 
     output_stream.write('midi', fp=OUTPUT_FILE)
-    print(f"✅ Success! Generated music saved to {OUTPUT_FILE}")
+    print(f"Success! Generated music saved to {OUTPUT_FILE}")
 
 
-def main():
+def create_songs():
     generate("speedster")
     # generate("classic")
     # generate("composer")
@@ -154,4 +132,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    create_songs()

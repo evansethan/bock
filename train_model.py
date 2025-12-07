@@ -1,19 +1,14 @@
 import os
-import glob
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import music21
 import pickle
-import numpy as np
 from collections import Counter
-from fractions import Fraction
 from helpers import parse_midi_files, DualMusicLSTM
-from config import DATA_DIR, MODEL_CONFIGS, AUG_RANGE
+from config import DATA_DIR, AUG_RANGE, load_config
 
-config_name = "speedster"
 
-# --- BASE CONFIGURATION ---
+# --- OLD CONFIGURATION (kept in for safety, will be overwritten) ---
 CACHE_FILE = "models/current/processed_midi.pkl"
 OUTPUT_FILE = "models/current/output.mid"
 MODEL_FILE = 'models/current/model.pkl'
@@ -31,35 +26,15 @@ TEMP_D = 1.1       # Creativity for rhythm (higher = less repetitive rhythm)
 TOP_P = 0.9   
 
 
-def load_config(config_name):
-    # --- SET NEW CONFIG ---
-    if config_name not in MODEL_CONFIGS:
-        raise ValueError(f"Config '{config_name}' not found.")
-        
-    config = MODEL_CONFIGS[config_name]
-
-    # Inject variables into global scope
-    globals().update(config)
-
-    # --- NEW: Auto-create the directory ---
-    # Extracts "models/titan" from "models/titan/model.pkl"
-    folder_path = os.path.dirname(config["MODEL_FILE"])
-    if not os.path.exists(folder_path):
-        print(f"Creating directory: {folder_path}")
-        os.makedirs(folder_path)
-
-    print(f"Current Model: {config_name}")
-
-
-
 def train(config_name):
 
-    load_config(config_name)
+    config = load_config(config_name)
+    globals().update(config)
     print(f"Current Hidden Size: {HIDDEN_SIZE}")
 
     # --- LOAD DATA ---
     if os.path.exists(CACHE_FILE):
-        print(f"✅ Loading cached data: {CACHE_FILE}")
+        print(f"Loading cached data: {CACHE_FILE}")
         with open(CACHE_FILE, 'rb') as f:
             data = pickle.load(f)
         all_pitches = data['pitches']
@@ -126,7 +101,7 @@ def train(config_name):
     # Setup Model
     if torch.backends.mps.is_available():
         device = torch.device("mps")
-        print("🚀 Using Device: MPS (Mac GPU)")
+        print("Using Device: MPS (Mac GPU)")
     else:
         device = torch.device("cpu")
 
@@ -170,8 +145,8 @@ def train(config_name):
         pickle.dump(model, f)
 
 
-def main():
-    train("speedster")
+def create_models():
+    # train("speedster")
     train("classic")
     train("composer")
     train("titan")
@@ -179,4 +154,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    create_models()

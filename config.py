@@ -1,4 +1,3 @@
-
 import os
 
 DATA_DIR = "midi_data/chorales"
@@ -116,4 +115,17 @@ MODEL_CONFIGS = {
     }
 }
 
+def load_config(config_name):
 
+    if config_name not in MODEL_CONFIGS:
+        raise ValueError(f"Config '{config_name}' not found.")
+        
+    config = MODEL_CONFIGS[config_name]
+
+    folder_path = os.path.dirname(config["MODEL_FILE"])
+    if not os.path.exists(folder_path):
+        print(f"Creating directory: {folder_path}")
+        os.makedirs(folder_path)
+
+    print(f"Current Model: {config_name}")
+    return config

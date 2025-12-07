@@ -1,12 +1,11 @@
 import os
 from music21 import corpus
+from config import DATA_DIR
 
-# Create your data directory if it doesn't exist
-output_dir = "midi_data/chorales"
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR)
 
-print(f"Extracting Bach chorales to {output_dir}...")
+print(f"Extracting Bach chorales to {DATA_DIR}...")
 
 # Get all Bach chorale paths from the corpus
 bach_paths = corpus.getComposer('bach')
@@ -20,7 +19,7 @@ for path in bach_paths:
         filename = os.path.basename(path).replace('.mxl', '.mid').replace('.xml', '.mid')
         
         # Save to your folder
-        song.write('midi', fp=os.path.join(output_dir, filename))
+        song.write('midi', fp=os.path.join(DATA_DIR, filename))
         count += 1
         print(f"Saved {filename}")
     except:
