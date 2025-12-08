@@ -133,11 +133,10 @@ def train(config_name):
 
 
 def create_models():
-    train("speedster")
+    # train("debug")
     # train("classic")
     # train("composer")
-    # train("titan")
-    # train("deep_stack")
+    train("deep_stack")
 
 
 if __name__ == "__main__":

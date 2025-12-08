@@ -8,9 +8,8 @@ from config import CACHE_FILE, load_config
 from helpers import nucleus_sample
 
 # --- OLD CONFIGURATION (kept in for safety, will be overwritten) ---
-CACHE_FILE = "old/processed_midi.pkl"
-OUTPUT_FILE = "old/output.mid"
-MODEL_FILE = 'old/model.pkl'
+OUTPUT_FILE = "models/classic/output.mid"
+MODEL_FILE = 'models/classic/model.pkl'
 SEQ_LENGTH = 128  
 HIDDEN_SIZE = 1024
 EMBED_DIM_PITCH = 128
@@ -124,10 +123,9 @@ def generate(config_name):
 
 
 def create_songs():
-    generate("speedster")
-    # generate("classic")
+    # generate("speedster")
+    generate("classic")
     # generate("composer")
-    # generate("titan")
     # generate("deep_stack")
 
 

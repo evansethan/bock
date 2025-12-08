@@ -6,21 +6,21 @@ CACHE_FILE = "models/processed_midi.pkl"
 
 # --- MODEL CONFIGURATIONS ---
 MODEL_CONFIGS = {
-    "speedster": { # Quick iteration; finding bugs; creating simple "folk" tunes.
+    "debug": { # Quick iteration; finding bugs; creating simple melodies
         "SEQ_LENGTH": 64,
         "HIDDEN_SIZE": 256,
         "EMBED_DIM_PITCH": 64,
         "EMBED_DIM_DUR": 32,
         "NUM_LAYERS": 2,
-        "EPOCHS": 5,
+        "EPOCHS": 5, # Few epochs for debugging
         "BATCH_SIZE": 128,
         "LEARNING_RATE": 0.001,
         "DROPOUT": 0.3,
         "TEMP_P": 1.2,
         "TEMP_D": 1.0,
         "TOP_P": 0.9,
-        "MODEL_FILE": "models/speedster/model.pkl",
-        "OUTPUT_FILE": "models/speedster/output.mid"
+        "MODEL_FILE": "models/debug/model.pkl",
+        "OUTPUT_FILE": "models/debug/output.mid"
     },
     "classic": { # The "Goldilocks" zone. Best starting point for Bach Chorales.
         "SEQ_LENGTH": 96,
