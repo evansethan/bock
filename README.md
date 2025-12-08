@@ -1,10 +1,10 @@
 # Bock
 
-Bock is a deep learning project for generating music in the style of Bach chorales. It uses a Dual Music LSTM model to learn the relationships between pitch and duration in music, and then generates new musical pieces based on what it has learned. There is also a Web UI component (Bachingbird) for easily generating and downloading midi files.
+Bock is a deep learning project for generating music in the style of Bach chorales. It uses a Dual Music LSTM model to learn the relationships between pitch and duration in music, and then generates new musical pieces based on what it has learned. There is also a Web UI component (Bachingbird) for easily generating and downloading midi files. You can run locally or visit https://bachingbird.streamlit.app/
 
 ## Responsible AI:
 
-No copyrighted work as used for training purposes in this project. This model is *only* trained on Bach chorales, which exist in the public domain, for learning the fundamentals of harmonic progression and voice leading.
+No copyrighted work as used for training purposes in this project. This model is *only* trained on Bach chorales, which exist in the public domain, for learning the fundamentals of harmonic progression and voice leading. Additionally, the music21 software library (used for midi processing) is open-source and licensed under the BSD 3-Clause License.
 
 ## Features
 
