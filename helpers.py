@@ -7,7 +7,7 @@ import pickle
 from collections import Counter
 
 
-# --- DUAL EMBEDDING MODEL ---
+# Dual Embedding Model
 class DualMusicLSTM(nn.Module):
     """
     A dual-embedding LSTM model for music generation.
@@ -116,10 +116,10 @@ def parse_midi_files(dir_path, aug_range):
                         
                     elif isinstance(element, music21.note.Note):
                         if element.duration.quarterLength < 0.1: continue
-                        
-                        # SAVE SEPARATELY
+                
                         pitches.append(element.pitch.nameWithOctave)
                         durations.append(str(element.duration.quarterLength))
+
         except Exception as e:
             print(f"Error processing {file}: {e}")
 

@@ -107,7 +107,7 @@ def generate(config_name):
         model, data, device, SEQ_LENGTH, num_notes, TEMP_P, TEMP_D, TOP_P
     )
 
-    # --- RECONSTRUCT & SAVE MIDI ---
+    # Reconstruct and save MIDI
     output_stream = music21.stream.Stream()
     print("Converting tokens to MIDI...")
 
