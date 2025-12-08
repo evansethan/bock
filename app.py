@@ -25,8 +25,7 @@ NUM_NOTES = 32
 
 # Page Configuration
 st.set_page_config(
-    page_title="Bachingbird | Generative Chorale Intelligence",
-    page_icon="🐦",
+    page_title="Bachingbird",
     layout="centered"
 )
 
@@ -142,7 +141,7 @@ model, data, device = load_system()
 if model is None:
     st.error("Could not load model. Please check file paths.")
 else:
-    if st.button("✨ Generate New Chorale", type="primary", width='stretch'):
+    if st.button("Generate New Chorale", type="primary", width='stretch'):
         with st.spinner("Composing..."):
             midi_io = generate_midi(model, data, device, NUM_NOTES)
             st.session_state['current_midi'] = midi_io
