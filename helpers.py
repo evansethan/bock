@@ -9,7 +9,13 @@ from collections import Counter
 
 # --- DUAL EMBEDDING MODEL ---
 class DualMusicLSTM(nn.Module):
+    """
+    A dual-embedding LSTM model for music generation.
+    """
     def __init__(self, n_pitch, n_dur, embed_pitch, embed_dur, hidden_size, num_layers, dropout):
+        """
+        Initializes the DualMusicLSTM model layers.
+        """
         super(DualMusicLSTM, self).__init__()
         
         # Two Embedding Layers
@@ -26,6 +32,16 @@ class DualMusicLSTM(nn.Module):
         self.dur_head = nn.Linear(hidden_size, n_dur)
 
     def forward(self, x_p, x_d):
+        """
+        Forward pass through the model.
+
+        Args:
+            x_p: Pitch input tensor.
+            x_d: Duration input tensor.
+
+        Returns:
+            A tuple of pitch and duration output tensors.
+        """
         # 1. Embed separately
         e_p = self.emb_pitch(x_p) # (Batch, Seq, Embed_Pitch)
         e_d = self.emb_dur(x_d)   # (Batch, Seq, Embed_Dur)
@@ -47,6 +63,16 @@ class DualMusicLSTM(nn.Module):
 
 
 def parse_midi_files(dir_path, aug_range):
+    """
+    Parses MIDI files in a directory to extract pitches and durations.
+
+    Args:
+        dir_path: Path to the directory containing MIDI files.
+        aug_range: The range for data augmentation by transposition.
+
+    Returns:
+        A tuple of two lists: pitches and durations.
+    """
     pitches = []
     durations = []
     print(f"Parsing MIDI files in {dir_path}...")
@@ -101,6 +127,17 @@ def parse_midi_files(dir_path, aug_range):
 
 
 def cache_midi_vocab(data_dir, aug_range, cache_file):
+    """
+    Parses MIDI files, creates vocabularies for pitches and durations, and caches them.
+
+    Args:
+        data_dir: Path to the directory containing MIDI files.
+        aug_range: The range for data augmentation.
+        cache_file: Path to the file where the cache will be saved.
+
+    Returns:
+        A tuple containing all pitches, all durations, pitch-to-int mapping, and duration-to-int mapping.
+    """
     all_pitches, all_durs = parse_midi_files(data_dir, aug_range)
     
     # Create Pitch Vocabulary
@@ -127,7 +164,9 @@ def cache_midi_vocab(data_dir, aug_range, cache_file):
 
 
 def nucleus_sample(prediction, top_p):
-    """Samples from the probability distribution using Nucleus Sampling."""
+    """
+    Samples from the probability distribution using Nucleus Sampling.
+    """
     probs = torch.nn.functional.softmax(prediction, dim=1).squeeze()
     sorted_probs, sorted_indices = torch.sort(probs, descending=True)
     cumulative_probs = torch.cumsum(sorted_probs, dim=0)

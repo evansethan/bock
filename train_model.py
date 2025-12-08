@@ -8,7 +8,7 @@ from helpers import cache_midi_vocab, DualMusicLSTM
 from config import DATA_DIR, AUG_RANGE, CACHE_FILE, load_config
 
 
-# --- DEFAULT CONFIG ---
+# Default setup - overwritten by load_config()
 OUTPUT_FILE = "models/classic/output.mid"
 MODEL_FILE = 'models/classic/model.pkl'
 SEQ_LENGTH = 128  
@@ -26,6 +26,9 @@ TOP_P = 0.9
 
 
 def train(config_name):
+    """
+    Trains the DualMusicLSTM model based on a specified configuration.
+    """
 
     config = load_config(config_name)
     globals().update(config)
@@ -121,7 +124,7 @@ def train(config_name):
             epoch_loss += total_loss.item()
         
         print(f"Epoch {epoch+1}/{EPOCHS} | Loss: {epoch_loss/len(dataloader):.4f}")
-        if (epoch_loss < 0.6):
+        if (epoch_loss/len(dataloader) < 0.55):
             print("Loss is low enough. Stopping training...")
             break
 
@@ -133,6 +136,9 @@ def train(config_name):
 
 
 def create_models():
+    """
+    Trains models for a predefined list of configurations.
+    """
     # train("debug")
     train("classic")
     # train("composer")

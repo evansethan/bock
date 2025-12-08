@@ -22,13 +22,13 @@ MODEL_CONFIGS = {
         "MODEL_FILE": "models/debug/model.pkl",
         "OUTPUT_FILE": "models/debug/output.mid"
     },
-    "classic": { # Most balanced model overall, subjectively best output
+    "classic": { # Most balanced model overall, default for app.py
         "SEQ_LENGTH": 128,
         "HIDDEN_SIZE": 1024,
         "EMBED_DIM_PITCH": 128,
         "EMBED_DIM_DUR": 64,
         "NUM_LAYERS": 2,
-        "EPOCHS": 20,
+        "EPOCHS": 10,
         "BATCH_SIZE": 64,
         "LEARNING_RATE": 0.001,
         "DROPOUT": 0.5,
@@ -38,7 +38,7 @@ MODEL_CONFIGS = {
         "MODEL_FILE": "models/classic/model.pkl",
         "OUTPUT_FILE": "models/classic/output.mid"
     },
-    "deep_stack": { # Learning complex voice leading (counterpoint) over raw chords.
+    "deep_stack": { # Learning complex voice leading (counterpoint) over raw chords
         "SEQ_LENGTH": 128,
         "HIDDEN_SIZE": 512,
         "EMBED_DIM_PITCH": 128,
@@ -54,7 +54,7 @@ MODEL_CONFIGS = {
         "MODEL_FILE": "models/deep_stack/model.pkl",
         "OUTPUT_FILE": "models/deep_stack/output.mid"
     },
-    "composer": { # Maintaining key signatures and phrasing over long durations.
+    "composer": { # Maintaining key signatures and phrasing over long durations
         "SEQ_LENGTH": 256,
         "HIDDEN_SIZE": 512,
         "EMBED_DIM_PITCH": 128,
@@ -70,7 +70,7 @@ MODEL_CONFIGS = {
         "MODEL_FILE": "models/composer/model.pkl",
         "OUTPUT_FILE": "models/composer/output.mid"
     },
-    "titan": { # High-fidelity texture. Risk of overfitting (needs high dropout).
+    "titan": { # High-fidelity texture. Risk of overfitting (needs high dropout)
         "SEQ_LENGTH": 128,
         "HIDDEN_SIZE": 1536,
         "EMBED_DIM_PITCH": 256,
@@ -89,6 +89,9 @@ MODEL_CONFIGS = {
 }
 
 def load_config(config_name):
+    """
+    Loads a model configuration and creates the model directory if missing.
+    """
 
     if config_name not in MODEL_CONFIGS:
         raise ValueError(f"Config '{config_name}' not found.")
@@ -100,5 +103,4 @@ def load_config(config_name):
         print(f"Creating directory: {folder_path}")
         os.makedirs(folder_path)
 
-    print(f"Current Model: {config_name}")
     return config

@@ -72,6 +72,18 @@ Train models from scratch? (y/n): n
 
 This will load the pre-trained models and generate a song for each configuration. The generated songs will be saved as MIDI files in the corresponding model directory within the `models/` directory.
 
+### Web-Based Generation (app.py)
+
+This project also includes a web-based interface for generating music using a trained model.
+
+1.  Make sure you have a trained model available (e.g., `models/classic/model.pkl`).
+2.  Run the Streamlit app:
+    ```bash
+    streamlit run app.py
+    ```
+3.  This will open a new tab in your web browser with the Bachingbird interface.
+4.  Click the "Generate New Chorale" button to create a new musical piece. You can listen to it directly in the browser and download the MIDI file.
+
 ## Model Configurations
 
 Bock provides several model configurations in `config.py` that you can use to experiment with different model architectures and hyperparameters.
