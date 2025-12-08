@@ -78,7 +78,7 @@ def parse_midi_files(dir_path, aug_range):
     print(f"Parsing MIDI files in {dir_path}...")
     
     if not os.path.exists(dir_path):
-        print(f"ERROR: Directory {dir_path} not found.")
+        print(f"ERROR: Directory {dir_path} not found. Did you run main.py?")
         return [], []
 
     files = glob.glob(os.path.join(dir_path, "*.mid")) + \
@@ -87,11 +87,11 @@ def parse_midi_files(dir_path, aug_range):
 
     for i, file in enumerate(files):
         try:
-            if i % 50 == 0: print(f"  Processing {i}/{len(files)}: {os.path.basename(file)}")
+            if i % 10 == 0: print(f"  Processing {i}/{len(files)}: {os.path.basename(file)}")
             midi = music21.converter.parse(file)
 
             # Augmentation Loop
-            for interval in range(-aug_range, aug_range + 1): # Transpose +- input range
+            for interval in range(-aug_range, aug_range + 1): # Transpose + - input range
                 if interval == 0:
                     score = midi
                 else:

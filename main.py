@@ -7,10 +7,7 @@ def main():
     Trains models and runs music generation process from CLI.
     """
 
-    user_input = input("Get Bach chorale corpus? (y/n): ")
-
-    if user_input.lower() == 'y':
-        get_chorales()
+    get_chorales() # includes check if alredy existing
 
     user_input = input("Train models from scratch? (y/n): ")
 

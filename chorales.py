@@ -7,12 +7,16 @@ def get_chorales():
     '''
     Extracts the music21 Bach chorale corpus for training models
     '''
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
-    else:
-        user_input = input("Chorales directory already exists. Are you sure? (y/n): ")
+    user_input = input("Get Bach chorale corpus? (y/n): ")
 
     if user_input.lower() == 'y':
+
+        if not os.path.exists(DATA_DIR):
+            os.makedirs(DATA_DIR)
+        else:
+            user_input = input("Chorales directory already exists. Are you sure? (y/n): ")
+            if user_input.lower() == 'y':
+                return
 
         print(f"Extracting Bach chorales to {DATA_DIR}...")
 
@@ -25,6 +29,9 @@ def get_chorales():
             try:
                 song = corpus.parse(path)
                 filename = os.path.basename(path).replace('.mxl', '.mid').replace('.xml', '.mid')
+
+                if "bwv" not in filename:
+                    continue
                 
                 # Save files to DATA_DIR
                 song.write('midi', fp=os.path.join(DATA_DIR, filename))
@@ -34,3 +41,8 @@ def get_chorales():
                 pass
 
         print(f"Done! Extracted {count} chorales.")
+
+
+
+if __name__ == "__main__":
+    get_chorales()

@@ -144,7 +144,7 @@ else:
         st.components.v1.html(html_code, height=350)
 
         st.download_button(
-            label="⬇️ Download MIDI",
+            label="Download MIDI",
             data=midi_data,
             file_name=f"bachingbird_output.mid",
             mime="audio/midi"

@@ -80,8 +80,8 @@ def generate(config_name):
     globals().update(config)
 
     print(f"Current Hidden Size: {HIDDEN_SIZE}") # make sure config was set
-    NUM_NOTES = int(SEQ_LENGTH/2)  # Length of generated song (don't generate past context window)
-    print("Num notes: ", NUM_NOTES)
+    num_notes = int(SEQ_LENGTH/2)  # stay inside context window
+    print("Num notes: ", num_notes)
 
     # Detect Device
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
@@ -102,11 +102,9 @@ def generate(config_name):
     model.to(device)
     model.eval()
 
-    # --- GENERATION ---
     print("Starting generation...")
-
     generated_pitches, generated_durs = generate_sequences(
-        model, data, device, SEQ_LENGTH, NUM_NOTES, TEMP_P, TEMP_D, TOP_P
+        model, data, device, SEQ_LENGTH, num_notes, TEMP_P, TEMP_D, TOP_P
     )
 
     # --- RECONSTRUCT & SAVE MIDI ---
@@ -126,7 +124,7 @@ def generate(config_name):
             el.duration.quarterLength = dur_val
             output_stream.append(el)
         except Exception as e:
-            pass # Silently skip invalid tokens
+            pass
 
     output_stream.write('midi', fp=OUTPUT_FILE)
     print(f"Success! Generated music saved to {OUTPUT_FILE}")
@@ -137,9 +135,9 @@ def create_songs():
     Generates songs for a predefined list of model configurations.
     """
     # generate("debug")
-    generate("classic")
+    # generate("classic")
     # generate("composer")
-    # generate("deep_stack")
+    generate("deep_stack")
     # generate("titan")
 
 

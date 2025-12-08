@@ -6,13 +6,13 @@ CACHE_FILE = "models/processed_midi.pkl"
 
 # --- MODEL CONFIGURATIONS ---
 MODEL_CONFIGS = {
-    "debug": { # Quick iteration; finding bugs; creating simple melodies
+    "debug": { # Quick iteration; finding bugs
         "SEQ_LENGTH": 64,
         "HIDDEN_SIZE": 256,
         "EMBED_DIM_PITCH": 64,
         "EMBED_DIM_DUR": 32,
         "NUM_LAYERS": 2,
-        "EPOCHS": 5, # Few epochs for debugging
+        "EPOCHS": 1, # only 1 Epoch for debugging
         "BATCH_SIZE": 128,
         "LEARNING_RATE": 0.001,
         "DROPOUT": 0.3,

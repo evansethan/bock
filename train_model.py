@@ -30,23 +30,27 @@ def train(config_name):
     Trains the DualMusicLSTM model based on a specified configuration.
     """
 
+    user_input = input("Reprocess MIDI corpus? (y/n): ")
+
     config = load_config(config_name)
     globals().update(config)
     print(f"Current Hidden Size: {HIDDEN_SIZE}")
 
     # --- LOAD DATA ---
-    if os.path.exists(CACHE_FILE):
+    process_chorales = user_input.lower() == 'y' or not os.path.exists(CACHE_FILE)
+
+    if process_chorales:
+        print("Processing chorales directory...")
+        all_pitches, all_durs, pitch_to_int, dur_to_int = cache_midi_vocab(DATA_DIR, AUG_RANGE, CACHE_FILE)
+    else:
         print(f"Loading cached data: {CACHE_FILE}")
         with open(CACHE_FILE, 'rb') as f:
             data = pickle.load(f)
-        all_pitches = data['pitches']
-        all_durs = data['durs']
-        pitch_to_int = data['pitch_to_int']
-        int_to_pitch = data['int_to_pitch']
-        dur_to_int = data['dur_to_int']
-        int_to_dur = data['int_to_dur']
-    else:
-        all_pitches, all_durs, pitch_to_int, dur_to_int = cache_midi_vocab(DATA_DIR, AUG_RANGE, CACHE_FILE)
+        
+        all_pitches, all_durs, pitch_to_int, int_to_pitch, dur_to_int, int_to_dur = (
+            data['pitches'], data['durs'], data['pitch_to_int'], 
+            data['int_to_pitch'], data['dur_to_int'], data['int_to_dur']
+        )
 
     n_pitch_vocab = len(pitch_to_int)
     n_dur_vocab = len(dur_to_int)
