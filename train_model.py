@@ -4,14 +4,13 @@ import torch.nn as nn
 import torch.optim as optim
 import pickle
 from collections import Counter
-from helpers import parse_midi_files, DualMusicLSTM
-from config import DATA_DIR, AUG_RANGE, load_config
+from helpers import cache_midi_vocab, DualMusicLSTM
+from config import DATA_DIR, AUG_RANGE, CACHE_FILE, load_config
 
 
 # --- OLD CONFIGURATION (kept in for safety, will be overwritten) ---
-CACHE_FILE = "models/current/processed_midi.pkl"
-OUTPUT_FILE = "models/current/output.mid"
-MODEL_FILE = 'models/current/model.pkl'
+OUTPUT_FILE = "old/output.mid"
+MODEL_FILE = 'old/model.pkl'
 SEQ_LENGTH = 128  
 HIDDEN_SIZE = 1024
 EMBED_DIM_PITCH = 128
@@ -44,27 +43,7 @@ def train(config_name):
         dur_to_int = data['dur_to_int']
         int_to_dur = data['int_to_dur']
     else:
-        all_pitches, all_durs = parse_midi_files(DATA_DIR, AUG_RANGE)
-        
-        # Create Pitch Vocabulary
-        pitch_counts = Counter(all_pitches)
-        vocab_pitch = sorted(list(set([p for p in all_pitches if pitch_counts[p] >= 2])))
-        pitch_to_int = {p: i for i, p in enumerate(vocab_pitch)}
-        int_to_pitch = {i: p for i, p in enumerate(vocab_pitch)}
-        
-        # Create Duration Vocabulary
-        dur_counts = Counter(all_durs)
-        vocab_dur = sorted(list(set(all_durs))) # Keep all durations
-        dur_to_int = {d: i for i, d in enumerate(vocab_dur)}
-        int_to_dur = {i: d for i, d in enumerate(vocab_dur)}
-        
-        print(f"Saving cache...")
-        with open(CACHE_FILE, 'wb') as f:
-            pickle.dump({
-                'pitches': all_pitches, 'durs': all_durs,
-                'pitch_to_int': pitch_to_int, 'int_to_pitch': int_to_pitch,
-                'dur_to_int': dur_to_int, 'int_to_dur': int_to_dur
-            }, f)
+        all_pitches, all_durs, pitch_to_int, dur_to_int = cache_midi_vocab(DATA_DIR, AUG_RANGE, CACHE_FILE)
 
     n_pitch_vocab = len(pitch_to_int)
     n_dur_vocab = len(dur_to_int)
@@ -95,9 +74,12 @@ def train(config_name):
     y_d = torch.tensor(target_durs, dtype=torch.long)
 
     dataset = torch.utils.data.TensorDataset(X_p, X_d, y_p, y_d)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True, pin_memory=True)
-
-
+    dataloader = torch.utils.data.DataLoader(dataset, 
+                                             batch_size=BATCH_SIZE, 
+                                             shuffle=True, 
+                                             num_workers=4, 
+                                             persistent_workers=True)
+                                                
     # Setup Model
     if torch.backends.mps.is_available():
         device = torch.device("mps")
@@ -139,18 +121,23 @@ def train(config_name):
             epoch_loss += total_loss.item()
         
         print(f"Epoch {epoch+1}/{EPOCHS} | Loss: {epoch_loss/len(dataloader):.4f}")
+        if (epoch_loss < 0.6):
+            print("Loss is low enough. Stopping training...")
+            break
 
     # Save
     with open(MODEL_FILE, 'wb') as f:
         pickle.dump(model, f)
+    
+    print("Saved model:", config_name)
 
 
 def create_models():
-    # train("speedster")
-    train("classic")
-    train("composer")
-    train("titan")
-    train("deep_stack")
+    train("speedster")
+    # train("classic")
+    # train("composer")
+    # train("titan")
+    # train("deep_stack")
 
 
 if __name__ == "__main__":

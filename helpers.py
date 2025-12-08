@@ -3,6 +3,8 @@ import glob
 import music21
 import torch
 import torch.nn as nn
+import pickle
+from collections import Counter
 
 
 # --- DUAL EMBEDDING MODEL ---
@@ -59,7 +61,7 @@ def parse_midi_files(dir_path, aug_range):
 
     for i, file in enumerate(files):
         try:
-            if i % 20 == 0: print(f"  Processing {i}/{len(files)}: {os.path.basename(file)}")
+            if i % 50 == 0: print(f"  Processing {i}/{len(files)}: {os.path.basename(file)}")
             midi = music21.converter.parse(file)
 
             # Augmentation Loop
@@ -96,6 +98,32 @@ def parse_midi_files(dir_path, aug_range):
             print(f"Error processing {file}: {e}")
 
     return pitches, durations
+
+
+def cache_midi_vocab(data_dir, aug_range, cache_file):
+    all_pitches, all_durs = parse_midi_files(data_dir, aug_range)
+    
+    # Create Pitch Vocabulary
+    pitch_counts = Counter(all_pitches)
+    vocab_pitch = sorted(list(set([p for p in all_pitches if pitch_counts[p] >= 2])))
+    pitch_to_int = {p: i for i, p in enumerate(vocab_pitch)}
+    int_to_pitch = {i: p for i, p in enumerate(vocab_pitch)}
+    
+    # Create Duration Vocabulary
+    dur_counts = Counter(all_durs)
+    vocab_dur = sorted(list(set(all_durs))) # Keep all durations
+    dur_to_int = {d: i for i, d in enumerate(vocab_dur)}
+    int_to_dur = {i: d for i, d in enumerate(vocab_dur)}
+    
+    print(f"Saving cache...")
+    with open(cache_file, 'wb') as f:
+        pickle.dump({
+            'pitches': all_pitches, 'durs': all_durs,
+            'pitch_to_int': pitch_to_int, 'int_to_pitch': int_to_pitch,
+            'dur_to_int': dur_to_int, 'int_to_dur': int_to_dur
+        }, f)
+
+    return all_pitches, all_durs, pitch_to_int, dur_to_int
 
 
 def nucleus_sample(prediction, top_p):

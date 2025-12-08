@@ -4,13 +4,13 @@ import numpy as np
 import pickle
 from fractions import Fraction
 import music21
-from config import load_config
+from config import CACHE_FILE, load_config
 from helpers import nucleus_sample
 
 # --- OLD CONFIGURATION (kept in for safety, will be overwritten) ---
-CACHE_FILE = "models/current/processed_midi.pkl"
-OUTPUT_FILE = "models/current/output.mid"
-MODEL_FILE = 'models/current/model.pkl'
+CACHE_FILE = "old/processed_midi.pkl"
+OUTPUT_FILE = "old/output.mid"
+MODEL_FILE = 'old/model.pkl'
 SEQ_LENGTH = 128  
 HIDDEN_SIZE = 1024
 EMBED_DIM_PITCH = 128
@@ -124,11 +124,11 @@ def generate(config_name):
 
 
 def create_songs():
-    # generate("speedster")
-    generate("classic")
-    generate("composer")
-    generate("titan")
-    generate("deep_stack")
+    generate("speedster")
+    # generate("classic")
+    # generate("composer")
+    # generate("titan")
+    # generate("deep_stack")
 
 
 if __name__ == "__main__":

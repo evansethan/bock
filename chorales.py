@@ -12,13 +12,12 @@ bach_paths = corpus.getComposer('bach')
 
 count = 0
 for path in bach_paths:
-    # We only want the 4-part chorales (usually .xml or .mxl in the corpus)
-    # We parse them and write them out as .mid
+    # Parse and write 4-part chorales as .mid
     try:
         song = corpus.parse(path)
         filename = os.path.basename(path).replace('.mxl', '.mid').replace('.xml', '.mid')
         
-        # Save to your folder
+        # Save files to DATA_DIR
         song.write('midi', fp=os.path.join(DATA_DIR, filename))
         count += 1
         print(f"Saved {filename}")
