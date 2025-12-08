@@ -1,7 +1,7 @@
 import os
 
 AUG_RANGE = 3
-DATA_DIR = "midi_data/chorales"
+DATA_DIR = "chorales"
 CACHE_FILE = "models/processed_midi.pkl"
 
 # --- MODEL CONFIGURATIONS ---
@@ -22,18 +22,18 @@ MODEL_CONFIGS = {
         "MODEL_FILE": "models/debug/model.pkl",
         "OUTPUT_FILE": "models/debug/output.mid"
     },
-    "classic": { # The "Goldilocks" zone. Best starting point for Bach Chorales.
-        "SEQ_LENGTH": 96,
-        "HIDDEN_SIZE": 512,
+    "classic": { # Most balanced model overall, subjectively best output
+        "SEQ_LENGTH": 128,
+        "HIDDEN_SIZE": 1024,
         "EMBED_DIM_PITCH": 128,
         "EMBED_DIM_DUR": 64,
         "NUM_LAYERS": 2,
         "EPOCHS": 20,
         "BATCH_SIZE": 64,
         "LEARNING_RATE": 0.001,
-        "DROPOUT": 0.4,
+        "DROPOUT": 0.5,
         "TEMP_P": 1.0,
-        "TEMP_D": 1.0,
+        "TEMP_D": 1.1,
         "TOP_P": 0.9,
         "MODEL_FILE": "models/classic/model.pkl",
         "OUTPUT_FILE": "models/classic/output.mid"

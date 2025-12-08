@@ -7,7 +7,7 @@ import music21
 from config import CACHE_FILE, load_config
 from helpers import nucleus_sample
 
-# --- OLD CONFIGURATION (kept in for safety, will be overwritten) ---
+# --- DEFAULT CONFIG ---
 OUTPUT_FILE = "models/classic/output.mid"
 MODEL_FILE = 'models/classic/model.pkl'
 SEQ_LENGTH = 128  
@@ -15,7 +15,7 @@ HIDDEN_SIZE = 1024
 EMBED_DIM_PITCH = 128
 EMBED_DIM_DUR = 64       
 NUM_LAYERS = 2
-EPOCHS = 15
+EPOCHS = 20
 BATCH_SIZE = 64
 LEARNING_RATE = 0.001
 DROPOUT = 0.5     
@@ -123,10 +123,11 @@ def generate(config_name):
 
 
 def create_songs():
-    # generate("speedster")
+    # generate("debug")
     generate("classic")
     # generate("composer")
     # generate("deep_stack")
+    # generate("titan")
 
 
 if __name__ == "__main__":

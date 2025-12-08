@@ -8,15 +8,15 @@ from helpers import cache_midi_vocab, DualMusicLSTM
 from config import DATA_DIR, AUG_RANGE, CACHE_FILE, load_config
 
 
-# --- OLD CONFIGURATION (kept in for safety, will be overwritten) ---
-OUTPUT_FILE = "old/output.mid"
-MODEL_FILE = 'old/model.pkl'
+# --- DEFAULT CONFIG ---
+OUTPUT_FILE = "models/classic/output.mid"
+MODEL_FILE = 'models/classic/model.pkl'
 SEQ_LENGTH = 128  
 HIDDEN_SIZE = 1024
 EMBED_DIM_PITCH = 128
 EMBED_DIM_DUR = 64       
 NUM_LAYERS = 2
-EPOCHS = 15
+EPOCHS = 20
 BATCH_SIZE = 64
 LEARNING_RATE = 0.001
 DROPOUT = 0.5     
@@ -134,9 +134,10 @@ def train(config_name):
 
 def create_models():
     # train("debug")
-    # train("classic")
+    train("classic")
     # train("composer")
-    train("deep_stack")
+    # train("deep_stack")
+    # train("titan")
 
 
 if __name__ == "__main__":
