@@ -1,7 +1,7 @@
 import os
 
-DATA_DIR = "midi_data/preludes"
-AUG_RANGE = 0
+AUG_RANGE = 3
+DATA_DIR = "midi_data/chorales"
 CACHE_FILE = "models/processed_midi.pkl"
 
 # --- MODEL CONFIGURATIONS ---
