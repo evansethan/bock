@@ -12,12 +12,9 @@ from helpers import DualMusicLSTM, nucleus_sample
 from generate_song import generate_sequences
 from config import load_config, CACHE_FILE
 
-
-# --- CUSTOMIZABLES ---
 NUM_NOTES = 32 # Specific to app.py only
 CONFIG_NAME = "classic" # see config.py for other options
 
-# Import config
 LOGO_FILE = "logo.jpg"
 config = load_config(CONFIG_NAME)
 
@@ -27,14 +24,12 @@ TEMPERATURE_PITCH = config['TEMP_P']
 TEMPERATURE_DUR = config['TEMP_D']
 TOP_P = config['TOP_P']
 
-
-# Page Configuration
 st.set_page_config(
     page_title="Bachingbird",
     layout="centered"
 )
 
-# --- SETUP & CACHING ---
+# Setup + caching
 @st.cache_resource
 def load_system():
     """
@@ -68,13 +63,11 @@ def generate_midi(model, data, device, num_notes=NUM_NOTES):
         TEMPERATURE_PITCH, TEMPERATURE_DUR, TOP_P
     )
 
-    # --- RECONSTRUCTION & METADATA ---
+    # Reconstruction + metadata step:
     output_stream = music21.stream.Stream()
     
-    # 1. Set Instrument to Church Organ (MIDI Program 19)
+    # set instrument (organ) and tempo (60 bpm)
     output_stream.insert(0, music21.instrument.Organ())
-    
-    # 2. Set Slower Tempo
     output_stream.insert(0, music21.tempo.MetronomeMark(number=60))
 
     for p, d in zip(generated_pitches, generated_durs):
@@ -104,8 +97,7 @@ def generate_midi(model, data, device, num_notes=NUM_NOTES):
     return midi_buffer
 
 
-# User Interface
-
+# Streamlit User Interface
 with st.sidebar:
     if os.path.exists(LOGO_FILE):
         st.image(LOGO_FILE, width='stretch')
@@ -127,7 +119,7 @@ else:
         b64_midi = base64.b64encode(midi_data).decode()
         midi_url = f"data:audio/midi;base64,{b64_midi}"
 
-        # SGM Plus soundfont is required for non-piano instruments like Organ
+        # SGM Plus soundfont is required for organ
         html_code = f"""
         <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
         

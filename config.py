@@ -4,7 +4,6 @@ AUG_RANGE = 3
 DATA_DIR = "chorales"
 CACHE_FILE = "models/processed_midi.pkl"
 
-# --- MODEL CONFIGURATIONS ---
 MODEL_CONFIGS = {
     "debug": { # Quick iteration; finding bugs
         "SEQ_LENGTH": 64,

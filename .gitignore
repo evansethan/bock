@@ -1,5 +1,10 @@
-chorales
 venv
-models
+models/composer
+models/debug
+models/deep_stack
+models/titan
+models/classic/info.txt
+models/classic/output.mid
+chorales
 .DS_Store
 app_demo*

@@ -36,7 +36,7 @@ def train(config_name):
     globals().update(config)
     print(f"Current Hidden Size: {HIDDEN_SIZE}")
 
-    # --- LOAD DATA ---
+    # Load data
     process_chorales = user_input.lower() == 'y' or not os.path.exists(CACHE_FILE)
 
     if process_chorales:
@@ -56,7 +56,7 @@ def train(config_name):
     n_dur_vocab = len(dur_to_int)
     print(f"Vocab Sizes -> Pitch: {n_pitch_vocab}, Duration: {n_dur_vocab}")
 
-    # --- PREPARE SEQUENCES (DUAL INPUTS) ---
+    # Prepare Dual-imput sequences
     input_pitches = []
     input_durs = []
     target_pitches = []
